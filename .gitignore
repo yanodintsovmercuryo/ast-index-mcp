@@ -1,0 +1,10 @@
+.claude/
+.vscode/
+.idea/
+.cursor/
+
+bin/
+
+
+AGENTS.md
+CLAUDE.md

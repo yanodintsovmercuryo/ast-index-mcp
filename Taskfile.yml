@@ -1,0 +1,169 @@
+version: "3"
+
+vars:
+  GOLANGCI_LINT_VERSION: "v2.5.0"
+  GOFUMPT_VERSION: "v0.9.2"
+  TAGALIGN_VERSION: "v1.4.3"
+  GOTESTSUM_VERSION: "v1.13.0"
+  MOCKGEN_VERSION: "v0.6.0"
+  BETTERALIGN_VERSION: "v0.8.0"
+  GOVULNCHECK_VERSION: "v1.1.4"
+
+  GOLANGCI_LINT_VERSION_SHORT:
+    sh: "echo \"{{.GOLANGCI_LINT_VERSION}}\" | sed 's/v//'"
+  DEPS_BIN_DIR: "{{.TASKFILE_DIR}}/bin/deps"
+
+env:
+  GOTOOLCHAIN: "auto"
+
+tasks:
+  deps:
+    desc: "Installs or updates project-local development tools (goimports, golangci-lint)."
+    cmds:
+      - "mkdir -p \"{{.DEPS_BIN_DIR}}\""
+      - "GOBIN=\"{{.DEPS_BIN_DIR}}\" go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}}"
+      - "GOBIN=\"{{.DEPS_BIN_DIR}}\" go install mvdan.cc/gofumpt@{{.GOFUMPT_VERSION}}"
+      - "GOBIN=\"{{.DEPS_BIN_DIR}}\" go install github.com/4meepo/tagalign/cmd/tagalign@{{.TAGALIGN_VERSION}}"
+      - "GOBIN=\"{{.DEPS_BIN_DIR}}\" go install gotest.tools/gotestsum@{{.GOTESTSUM_VERSION}}"
+      - "GOBIN=\"{{.DEPS_BIN_DIR}}\" go install github.com/dkorunic/betteralign/cmd/betteralign@{{.BETTERALIGN_VERSION}}"
+      - "GOBIN=\"{{.DEPS_BIN_DIR}}\" go install golang.org/x/vuln/cmd/govulncheck@{{.GOVULNCHECK_VERSION}}"
+      - "GOBIN=\"{{.DEPS_BIN_DIR}}\" go install go.uber.org/mock/mockgen@{{.MOCKGEN_VERSION}}"
+    status:
+      - "{{.DEPS_BIN_DIR}}/golangci-lint --version 2>/dev/null | grep -q {{.GOLANGCI_LINT_VERSION_SHORT}}"
+      - "test -x {{.DEPS_BIN_DIR}}/gofumpt"
+      - "test -x {{.DEPS_BIN_DIR}}/tagalign"
+      - "test -x {{.DEPS_BIN_DIR}}/gotestsum"
+      - "test -x {{.DEPS_BIN_DIR}}/betteralign"
+      - "test -x {{.DEPS_BIN_DIR}}/govulncheck"
+      - "test -x {{.DEPS_BIN_DIR}}/mockgen"
+    generates:
+      - "{{.DEPS_BIN_DIR}}/golangci-lint"
+      - "{{.DEPS_BIN_DIR}}/gofumpt"
+      - "{{.DEPS_BIN_DIR}}/tagalign"
+      - "{{.DEPS_BIN_DIR}}/gotestsum"
+      - "{{.DEPS_BIN_DIR}}/betteralign"
+      - "{{.DEPS_BIN_DIR}}/govulncheck"
+      - "{{.DEPS_BIN_DIR}}/mockgen"
+
+  _check-tools: # Эта задача теперь гарантирует, что deps отработала
+    internal: true
+    deps:
+      - task: "deps"
+    cmds:
+      - cmd: "true" # Просто для того, чтобы задача имела команду
+        silent: true
+
+  pre-commit:
+    desc: "Runs pre-commit checks."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - task: "generate"
+      - task: "fmt"
+      - task: "build"
+      - task: "lint"
+      - task: "test"
+
+  fmt:
+    desc: "Formats Go source files using local goimports."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - task: "fmt:go"
+      - task: "fmt:golangci"
+      - task: "fmt:betteralign"
+
+  fmt:go:
+    desc: "Format code with gofmt"
+    deps:
+      - "deps"
+    cmds:
+      - "go fmt ./..."
+
+  fmt:golangci:
+    desc: "Format code with golangci-lint"
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "\"{{.DEPS_BIN_DIR}}/golangci-lint\" fmt ./..."
+
+  fmt:betteralign:
+    desc: "Runs betteralign."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "\"{{.DEPS_BIN_DIR}}/betteralign\" -apply ./... || true"
+  
+  lint:
+    desc: "Runs golangci-lint."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - task: "fmt:golangci"
+      - task: "lint:check"
+      - task: "lint:betteralign"
+  
+  lint:check:
+    desc: "Runs golangci-lint using local installation."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "\"{{.DEPS_BIN_DIR}}/golangci-lint\" run {{.FLAGS}} ./..."
+      
+  lint:betteralign:
+    desc: "Runs betteralign."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "\"{{.DEPS_BIN_DIR}}/betteralign\" ./..."
+
+  lint:vulncheck:
+    desc: "Checks project dependencies for known vulnerabilities using govulncheck."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "\"{{.DEPS_BIN_DIR}}/govulncheck\" -show verbose {{.FLAGS}} ./..."
+
+  test:
+    desc: "Runs Go tests."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "{{.DEPS_BIN_DIR}}/gotestsum --format pkgname --packages=$(go list ./...)"
+
+  test:coverage:
+    desc: "Runs Go tests with coverage."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "go test -coverprofile=cover.out ./..."
+      - "{{.DEPS_BIN_DIR}}/go-test-coverage --config=./.testcoverage.yml --profile cover.out"
+
+  build:
+    desc: "Builds the ast-index-mcp binary."
+    cmds:
+      - "go build -o bin/build/ast-index-mcp ./"
+
+  tidy:
+    desc: "Tidies Go modules."
+    cmds:
+      - "go mod tidy"
+
+  generate:
+    desc: "Runs go generate."
+    deps:
+      - task: "_check-tools"
+    cmds:
+      - "PATH=\"{{.DEPS_BIN_DIR}}:${PATH}\" go generate {{.FLAGS}} ./..."
+      - task: "fmt"
+
+  clean:
+    desc: "Cleans temporary files and build artifacts (including local deps)."
+    cmds:
+      - "echo \"Cleaning up build directory and local deps...\""
+      - "rm -rf \"{{.DEPS_BIN_DIR}}\""
+
+  run:
+    desc: "Runs the ast-index-mcp server (stdio mode)."
+    cmds:
+      - "go run ./cmd/ast-index-mcp"
