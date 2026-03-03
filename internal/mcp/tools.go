@@ -1,6 +1,7 @@
 package mcp
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -115,7 +116,7 @@ func (h *ToolHandler) Handle(ctx context.Context, toolName string, args map[stri
 	dataJSON, _ := json.Marshal(data)
 
 	return Response{
-		Ok:          result.ExitCode == 0,
+		Ok:          result.ExitCode == 0 && !bytes.Contains(result.Stdout, []byte("Index not found")),
 		Tool:        toolName,
 		Command:     def.CLISubcommand,
 		Argv:        argv,
@@ -175,7 +176,11 @@ func (h *ToolHandler) buildArgv(def commands.CommandDef, args map[string]any, cw
 					return nil, err
 				}
 			}
-			argv = append(argv, v)
+			if argDef.Flag != "" {
+				argv = append(argv, "--"+argDef.Flag, v)
+			} else {
+				argv = append(argv, v)
+			}
 
 		case commands.ArgKindBoolean:
 			if v, ok := boolArg(args, argDef.Name); ok && v {

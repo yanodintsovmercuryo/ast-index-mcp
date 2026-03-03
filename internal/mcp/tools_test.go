@@ -3,6 +3,8 @@ package mcp_test
 import (
 	"context"
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -116,6 +118,66 @@ func TestToolHandler_Handle_SQLDenyList(t *testing.T) {
 			}
 		}
 		require.True(t, noDenyDiag)
+	})
+}
+
+func setUpWithBin(t *testing.T, root, bin string) *internalmcp.ToolHandler {
+	t.Helper()
+	guard, err := security.NewPathGuard(root)
+	require.NoError(t, err)
+	return internalmcp.NewToolHandler(bin, root, 5, commands.New(), guard, runner.New(), normalize.New())
+}
+
+func TestToolHandler_Handle_FlagArgs(t *testing.T) {
+	t.Parallel()
+
+	root := t.TempDir()
+	handler := setUp(t, root)
+
+	t.Run("ast_changed base is passed as --base flag", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_changed", map[string]any{
+			"base": "main",
+		})
+		require.Equal(t, "ast_changed", resp.Tool)
+		require.Contains(t, resp.Argv, "--base")
+		require.Contains(t, resp.Argv, "main")
+	})
+
+	t.Run("ast_search kind is passed as --kind flag", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_search", map[string]any{
+			"query": "foo",
+			"kind":  "func",
+		})
+		require.Contains(t, resp.Argv, "--kind")
+		require.Contains(t, resp.Argv, "func")
+	})
+
+	t.Run("ast_rebuild project_type is passed as --project-type flag", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_rebuild", map[string]any{
+			"project_type": "go",
+		})
+		require.Contains(t, resp.Argv, "--project-type")
+		require.Contains(t, resp.Argv, "go")
+	})
+}
+
+func TestToolHandler_Handle_IndexNotFound(t *testing.T) {
+	t.Parallel()
+
+	root := t.TempDir()
+	scriptPath := filepath.Join(t.TempDir(), "fake-ast")
+	err := os.WriteFile(scriptPath, []byte("#!/bin/sh\necho 'Index not found. Run ast-index rebuild first.'\nexit 0\n"), 0755)
+	require.NoError(t, err)
+
+	handler := setUpWithBin(t, root, scriptPath)
+
+	t.Run("ok is false when stdout contains Index not found", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_stats", map[string]any{})
+		require.False(t, resp.Ok)
 	})
 }
 

@@ -22,6 +22,8 @@ type ArgDef struct {
 	Kind        ArgKind
 	Description string
 	Required    bool
+	// Flag, when non-empty, means the value is passed as --Flag <value> instead of a positional arg.
+	Flag string
 }
 
 // CommandDef describes a single ast-index command exposed as an MCP tool.
@@ -126,7 +128,7 @@ func allCommands() []CommandDef {
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Required: true, Description: "Search query"},
 				{Name: "limit", Kind: ArgKindNumber, Description: "Maximum number of results"},
-				{Name: "kind", Kind: ArgKindString, Description: "Filter by symbol kind (class, func, etc.)"},
+				{Name: "kind", Kind: ArgKindString, Description: "Filter by symbol kind (class, func, etc.)", Flag: "kind"},
 			},
 		},
 		{
@@ -137,7 +139,7 @@ func allCommands() []CommandDef {
 			UsesFormatJSON: true,
 			Args: []ArgDef{
 				{Name: "name", Kind: ArgKindString, Required: true, Description: "Symbol name or prefix"},
-				{Name: "kind", Kind: ArgKindString, Description: "Filter by symbol kind"},
+				{Name: "kind", Kind: ArgKindString, Description: "Filter by symbol kind", Flag: "kind"},
 			},
 		},
 		{
@@ -158,7 +160,7 @@ func allCommands() []CommandDef {
 			UsesFormatJSON: true,
 			Args: []ArgDef{
 				{Name: "pattern", Kind: ArgKindString, Required: true, Description: "File name pattern"},
-				{Name: "glob", Kind: ArgKindString, Description: "Additional glob filter"},
+				{Name: "glob", Kind: ArgKindString, Description: "Additional glob filter", Flag: "glob"},
 			},
 		},
 		{
@@ -169,7 +171,7 @@ func allCommands() []CommandDef {
 			UsesFormatJSON: true,
 			Args: []ArgDef{
 				{Name: "symbol", Kind: ArgKindString, Required: true, Description: "Symbol name"},
-				{Name: "scope", Kind: ArgKindString, Description: "Limit search to a module or directory scope"},
+				{Name: "scope", Kind: ArgKindString, Description: "Limit search to a module or directory scope", Flag: "scope"},
 			},
 		},
 		{
@@ -369,12 +371,12 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_agrep",
 			CLISubcommand:  "agrep",
-			Description:    "AST-aware structural pattern search",
+			Description:    "AST-aware structural pattern search. Requires ast-grep installed (brew install ast-grep / npm i -g @ast-grep/cli).",
 			DataType:       "pattern_matches",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
 				{Name: "pattern", Kind: ArgKindString, Required: true, Description: "Structural pattern"},
-				{Name: "lang", Kind: ArgKindString, Description: "Language filter"},
+				{Name: "lang", Kind: ArgKindString, Description: "Language filter", Flag: "lang"},
 			},
 		},
 
@@ -448,7 +450,7 @@ func allCommands() []CommandDef {
 			DataType:       "conventions",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
-				{Name: "focus", Kind: ArgKindString, Description: "Comma-separated focus areas (architecture, frameworks, naming)"},
+				{Name: "focus", Kind: ArgKindString, Description: "Comma-separated focus areas (architecture, frameworks, naming)", Flag: "focus"},
 			},
 		},
 
@@ -614,7 +616,7 @@ func allCommands() []CommandDef {
 			DataType:       "changed_symbols",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
-				{Name: "base", Kind: ArgKindString, Description: "Base branch or commit (default: main)"},
+				{Name: "base", Kind: ArgKindString, Description: "Base branch or commit (default: main)", Flag: "base"},
 			},
 		},
 		{
@@ -634,8 +636,8 @@ func allCommands() []CommandDef {
 			DataType:       "index_operation",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
-				{Name: "type", Kind: ArgKindString, Description: "Index type filter"},
-				{Name: "project_type", Kind: ArgKindString, Description: "Project type hint"},
+				{Name: "type", Kind: ArgKindString, Description: "Index type filter", Flag: "type"},
+				{Name: "project_type", Kind: ArgKindString, Description: "Project type hint", Flag: "project-type"},
 			},
 		},
 		{
@@ -645,7 +647,7 @@ func allCommands() []CommandDef {
 			DataType:       "index_operation",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
-				{Name: "since", Kind: ArgKindString, Description: "Update since this git ref"},
+				{Name: "since", Kind: ArgKindString, Description: "Update since this git ref", Flag: "since"},
 			},
 		},
 		{
@@ -682,8 +684,8 @@ func allCommands() []CommandDef {
 			DataType:       "unused_symbols",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
-				{Name: "module", Kind: ArgKindString, Description: "Limit to module"},
-				{Name: "visibility", Kind: ArgKindString, Description: "Filter by visibility (public, internal, private)"},
+				{Name: "module", Kind: ArgKindString, Description: "Limit to module", Flag: "module"},
+				{Name: "visibility", Kind: ArgKindString, Description: "Filter by visibility (public, internal, private)", Flag: "visibility"},
 			},
 		},
 
@@ -744,7 +746,7 @@ func allCommands() []CommandDef {
 			DataType:       "db_schema",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
-				{Name: "table", Kind: ArgKindString, Description: "Filter by table name"},
+				{Name: "table", Kind: ArgKindString, Description: "Filter by table name", Flag: "table"},
 			},
 		},
 	}

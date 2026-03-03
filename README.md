@@ -12,6 +12,16 @@ brew install defendend/tap/ast-index
 
 Or build from source — see the [ast-index repository](https://github.com/defendend/Claude-ast-index-search).
 
+### Optional: install ast-grep (for specific commands)
+
+```bash
+brew install ast-grep
+```
+
+Required only for `ast_agrep` (CLI subcommand `agrep`). Other commands do not require `ast-grep`.
+
+
+
 ### Install ast-index-mcp
 
 ```bash
