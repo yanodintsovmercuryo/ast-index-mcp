@@ -128,7 +128,6 @@ func allCommands() []CommandDef {
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Required: true, Description: "Search query"},
 				{Name: "limit", Kind: ArgKindNumber, Description: "Maximum number of results"},
-				{Name: "kind", Kind: ArgKindString, Description: "Filter by symbol kind (class, func, etc.)", Flag: "kind"},
 			},
 		},
 		{

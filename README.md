@@ -168,7 +168,7 @@ Every tool returns a JSON object with the same structure:
 
 **Search for a class:**
 ```json
-{ "tool": "ast_search", "arguments": { "query": "UserRepository", "kind": "class" } }
+{ "tool": "ast_search", "arguments": { "query": "class UserRepository" } }
 ```
 
 **Get index statistics:**

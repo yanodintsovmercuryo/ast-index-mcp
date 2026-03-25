@@ -144,10 +144,10 @@ func TestToolHandler_Handle_FlagArgs(t *testing.T) {
 		require.Contains(t, resp.Argv, "main")
 	})
 
-	t.Run("ast_search kind is passed as --kind flag", func(t *testing.T) {
+	t.Run("ast_symbol kind is passed as --kind flag", func(t *testing.T) {
 		t.Parallel()
-		resp := handler.Handle(context.Background(), "ast_search", map[string]any{
-			"query": "foo",
+		resp := handler.Handle(context.Background(), "ast_symbol", map[string]any{
+			"name":  "foo",
 			"kind":  "func",
 		})
 		require.Contains(t, resp.Argv, "--kind")
