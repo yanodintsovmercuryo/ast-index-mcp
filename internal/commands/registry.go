@@ -223,6 +223,7 @@ func allCommands() []CommandDef {
 			Description:    "Call tree rooted at a function",
 			DataType:       "call_tree",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "function", Kind: ArgKindString, Required: true, Description: "Root function name"},
 				{Name: "depth", Kind: ArgKindNumber, Description: "Maximum tree depth"},
@@ -244,6 +245,7 @@ func allCommands() []CommandDef {
 			Description:    "Class/type inheritance hierarchy",
 			DataType:       "hierarchy",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "class_name", Kind: ArgKindString, Required: true, Description: "Class name"},
 				{Name: "depth", Kind: ArgKindNumber, Description: "Maximum depth"},
@@ -287,6 +289,7 @@ func allCommands() []CommandDef {
 			Description:    "Dependency-injection providers for a type",
 			DataType:       "di_providers",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "type_name", Kind: ArgKindString, Required: true, Description: "Type name to search providers for"},
 			},
@@ -319,6 +322,7 @@ func allCommands() []CommandDef {
 			Description:    "Deprecated symbols",
 			DataType:       "deprecated_items",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional name filter"},
 			},
@@ -329,6 +333,7 @@ func allCommands() []CommandDef {
 			Description:    "Suppressed warnings / lint annotations",
 			DataType:       "annotations",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -339,6 +344,7 @@ func allCommands() []CommandDef {
 			Description:    "Injection points for a type",
 			DataType:       "di_injections",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "type_name", Kind: ArgKindString, Required: true, Description: "Type name to find injections for"},
 			},
@@ -402,6 +408,7 @@ func allCommands() []CommandDef {
 			Description:    "Structural pattern search (requires ast-grep)",
 			DataType:       "pattern_matches",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "pattern", Kind: ArgKindString, Required: true, Description: "Structural pattern"},
 				{Name: "lang", Kind: ArgKindString, Description: "Language filter", Flag: "lang"},
@@ -447,6 +454,7 @@ func allCommands() []CommandDef {
 			Description:    "Unused dependencies of a module",
 			DataType:       "unused_dependencies",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "module", Kind: ArgKindString, Required: true, Description: "Module name"},
 			},
@@ -457,6 +465,7 @@ func allCommands() []CommandDef {
 			Description:    "Public API surface of a module",
 			DataType:       "public_api",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "module", Kind: ArgKindString, Required: true, Description: "Module name"},
 			},
@@ -477,6 +486,7 @@ func allCommands() []CommandDef {
 			Description:    "Project architecture and coding conventions",
 			DataType:       "conventions",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "focus", Kind: ArgKindString, Description: "Comma-separated focus areas (architecture, frameworks, naming)", Flag: "focus"},
 			},
@@ -681,6 +691,7 @@ func allCommands() []CommandDef {
 			Description:    "File-watcher for automatic index updates",
 			DataType:       "watch_status",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "debounce_ms", Kind: ArgKindNumber, Description: "Debounce interval in milliseconds"},
 			},
@@ -691,6 +702,7 @@ func allCommands() []CommandDef {
 			Description:    "Index statistics",
 			DataType:       "index_stats",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "details", Kind: ArgKindBoolean, Description: "Include detailed breakdown"},
 			},
@@ -700,6 +712,7 @@ func allCommands() []CommandDef {
 			CLISubcommand: "version",
 			Description:   "ast-index version information",
 			DataType:      "version_info",
+			Groups:        []string{"extended"},
 			Args:          []ArgDef{},
 		},
 		{
@@ -708,6 +721,7 @@ func allCommands() []CommandDef {
 			Description:    "Unused symbols in the codebase",
 			DataType:       "unused_symbols",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "module", Kind: ArgKindString, Description: "Limit to module", Flag: "module"},
 				{Name: "visibility", Kind: ArgKindString, Description: "Filter by visibility (public, internal, private)", Flag: "visibility"},
@@ -721,6 +735,7 @@ func allCommands() []CommandDef {
 			Description:    "Add a root directory to the multi-root index",
 			DataType:       "roots_operation",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "path", Kind: ArgKindString, Required: true, Description: "Absolute path to add"},
 			},
@@ -731,6 +746,7 @@ func allCommands() []CommandDef {
 			Description:    "All indexed root directories",
 			DataType:       "roots",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args:           []ArgDef{},
 		},
 		{
@@ -739,6 +755,7 @@ func allCommands() []CommandDef {
 			Description:    "Remove a root directory from the multi-root index",
 			DataType:       "roots_operation",
 			UsesFormatJSON: true,
+			Groups:         []string{"extended"},
 			Args: []ArgDef{
 				{Name: "path", Kind: ArgKindString, Required: true, Description: "Root path to remove"},
 			},
@@ -751,6 +768,7 @@ func allCommands() []CommandDef {
 			Description:    "Read-only SQL query against the ast-index database",
 			DataType:       "sql_result",
 			UsesFormatJSON: true,
+			Groups:         []string{"sql"},
 			Args: []ArgDef{
 				{Name: "sql", Kind: ArgKindString, Required: true, Description: "SELECT statement to execute"},
 				{Name: "limit", Kind: ArgKindNumber, Description: "Maximum number of rows"},
@@ -762,6 +780,7 @@ func allCommands() []CommandDef {
 			Description:    "Path to the ast-index SQLite database file",
 			DataType:       "db_info",
 			UsesFormatJSON: true,
+			Groups:         []string{"sql"},
 			Args:           []ArgDef{},
 		},
 		{
@@ -770,6 +789,7 @@ func allCommands() []CommandDef {
 			Description:    "Database schema (tables, indexes, columns)",
 			DataType:       "db_schema",
 			UsesFormatJSON: true,
+			Groups:         []string{"sql"},
 			Args: []ArgDef{
 				{Name: "table", Kind: ArgKindString, Description: "Filter by table name", Flag: "table"},
 			},

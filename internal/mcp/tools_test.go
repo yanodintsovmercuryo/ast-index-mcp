@@ -25,7 +25,7 @@ func setUp(t *testing.T, root string) *internalmcp.ToolHandler {
 		"echo", // use echo as fake ast-index binary
 		root,
 		5,
-		commands.New(nil),
+		commands.New([]string{"extended", "sql"}),
 		guard,
 		runner.New(),
 		normalize.New(),
@@ -125,7 +125,7 @@ func setUpWithBin(t *testing.T, root, bin string) *internalmcp.ToolHandler {
 	t.Helper()
 	guard, err := security.NewPathGuard(root)
 	require.NoError(t, err)
-	return internalmcp.NewToolHandler(bin, root, 5, commands.New(nil), guard, runner.New(), normalize.New())
+	return internalmcp.NewToolHandler(bin, root, 5, commands.New([]string{"extended", "sql"}), guard, runner.New(), normalize.New())
 }
 
 func TestToolHandler_Handle_FlagArgs(t *testing.T) {

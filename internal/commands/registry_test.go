@@ -39,7 +39,7 @@ func TestRegistry_New(t *testing.T) {
 	t.Run("New(nil) registers universal tools only", func(t *testing.T) {
 		t.Parallel()
 		r := commands.New(nil)
-		require.Equal(t, 41, len(r.All()))
+		require.Equal(t, 21, len(r.All()))
 	})
 
 	t.Run("all commands have non-empty DataType", func(t *testing.T) {
@@ -98,7 +98,8 @@ func TestRegistry_Get(t *testing.T) {
 
 	t.Run("ast_query has required sql arg", func(t *testing.T) {
 		t.Parallel()
-		d, ok := r.Get("ast_query")
+		rSQL := commands.New([]string{"sql"})
+		d, ok := rSQL.Get("ast_query")
 		require.True(t, ok)
 		found := false
 		for _, arg := range d.Args {
@@ -112,7 +113,8 @@ func TestRegistry_Get(t *testing.T) {
 
 	t.Run("ast_version has no required args", func(t *testing.T) {
 		t.Parallel()
-		d, ok := r.Get("ast_version")
+		rExt := commands.New([]string{"extended"})
+		d, ok := rExt.Get("ast_version")
 		require.True(t, ok)
 		for _, arg := range d.Args {
 			require.False(t, arg.Required, "ast_version should have no required args")
@@ -123,16 +125,27 @@ func TestRegistry_Get(t *testing.T) {
 func TestRegistry_GroupFiltering_WithTags(t *testing.T) {
 	t.Parallel()
 
-	t.Run("New(nil) excludes language-specific tools", func(t *testing.T) {
+	t.Run("New(nil) excludes opt-in group tools", func(t *testing.T) {
 		t.Parallel()
 		r := commands.New(nil)
-		langSpecific := []string{
+		optIn := []string{
+			// kotlin
 			"ast_suspend", "ast_composables", "ast_flows", "ast_previews", "ast_async_funcs",
+			// android
 			"ast_deeplinks", "ast_xml_usages", "ast_resource", "ast_asset",
+			// swift
 			"ast_swiftui", "ast_publishers", "ast_main_actor", "ast_storyboard_usages",
+			// perl
 			"ast_perl_exports", "ast_perl_subs", "ast_perl_pod", "ast_perl_tests", "ast_perl_imports",
+			// extended
+			"ast_call_tree", "ast_hierarchy", "ast_provides", "ast_deprecated", "ast_suppress",
+			"ast_inject", "ast_agrep", "ast_unused_deps", "ast_api", "ast_conventions",
+			"ast_watch", "ast_stats", "ast_version", "ast_unused_symbols",
+			"ast_add_root", "ast_list_roots", "ast_remove_root",
+			// sql
+			"ast_query", "ast_db_path", "ast_schema",
 		}
-		for _, name := range langSpecific {
+		for _, name := range optIn {
 			_, ok := r.Get(name)
 			require.False(t, ok, "tool %s should not be in universal set", name)
 		}
@@ -196,11 +209,41 @@ func TestRegistry_GroupFiltering_WithTags(t *testing.T) {
 		require.True(t, hasMerged)
 	})
 
-	t.Run("New(android) count after merge is 45", func(t *testing.T) {
+	t.Run("New(android) count after merge is 25", func(t *testing.T) {
 		t.Parallel()
 		r := commands.New([]string{"android"})
-		// 41 universal + 4 android (ast_deeplinks, ast_xml_usages, ast_resource, ast_asset)
-		require.Equal(t, 45, len(r.All()))
+		// 21 universal + 4 android (ast_deeplinks, ast_xml_usages, ast_resource, ast_asset)
+		require.Equal(t, 25, len(r.All()))
+	})
+
+	t.Run("New(extended) includes extended tools", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"extended"})
+		for _, name := range []string{
+			"ast_call_tree", "ast_hierarchy", "ast_provides", "ast_deprecated", "ast_suppress",
+			"ast_inject", "ast_agrep", "ast_unused_deps", "ast_api", "ast_conventions",
+			"ast_watch", "ast_stats", "ast_version", "ast_unused_symbols",
+			"ast_add_root", "ast_list_roots", "ast_remove_root",
+		} {
+			_, ok := r.Get(name)
+			require.True(t, ok, "tool %s should be included with extended group", name)
+		}
+	})
+
+	t.Run("New(sql) includes sql tools", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"sql"})
+		for _, name := range []string{"ast_query", "ast_db_path", "ast_schema"} {
+			_, ok := r.Get(name)
+			require.True(t, ok, "tool %s should be included with sql group", name)
+		}
+	})
+
+	t.Run("New(sql) count is 24", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"sql"})
+		// 21 universal + 3 sql
+		require.Equal(t, 24, len(r.All()))
 	})
 
 }
