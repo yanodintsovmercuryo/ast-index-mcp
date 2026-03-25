@@ -49,7 +49,7 @@ func run() error {
 		return fmt.Errorf("init path guard: %w", err)
 	}
 
-	registry := commands.New()
+	registry := commands.New(cfg.Tools)
 	r := runner.New()
 	n := normalize.New()
 

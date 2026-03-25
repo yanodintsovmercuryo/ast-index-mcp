@@ -42,6 +42,9 @@ type CommandDef struct {
 	UsesFormatJSON bool
 	// AllowRawArgs permits callers to append raw_args to the CLI invocation.
 	AllowRawArgs bool
+	// Groups lists opt-in group names that activate this tool (e.g. "kotlin", "swift").
+	// Empty means universal — always included regardless of enabled groups.
+	Groups []string
 }
 
 // Registry is the static registry of all supported ast-index commands.
@@ -50,18 +53,39 @@ type Registry struct {
 }
 
 // New builds and validates the command registry.
+// enabledGroups is the list of opt-in group names from config (e.g. ["kotlin", "android"]).
+// Tools with no Groups are always included. Tools with Groups are included only if at
+// least one of their groups is in enabledGroups.
 // Panics if any tool name is duplicated.
-func New() *Registry {
+func New(enabledGroups []string) *Registry {
 	defs := allCommands()
 
 	m := make(map[string]CommandDef, len(defs))
 	for _, d := range defs {
+		if !isEnabled(d, enabledGroups) {
+			continue
+		}
 		if _, exists := m[d.ToolName]; exists {
 			panic(fmt.Sprintf("commands: duplicate tool name %q", d.ToolName))
 		}
 		m[d.ToolName] = d
 	}
 	return &Registry{commands: m}
+}
+
+// isEnabled reports whether a command should be included given the enabled groups.
+func isEnabled(def CommandDef, enabledGroups []string) bool {
+	if len(def.Groups) == 0 {
+		return true
+	}
+	for _, eg := range enabledGroups {
+		for _, dg := range def.Groups {
+			if eg == dg {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // Get returns the CommandDef for the given MCP tool name.

@@ -13,12 +13,12 @@ func TestRegistry_New(t *testing.T) {
 
 	t.Run("creates without panic", func(t *testing.T) {
 		t.Parallel()
-		require.NotPanics(t, func() { commands.New() })
+		require.NotPanics(t, func() { commands.New(nil) })
 	})
 
 	t.Run("all tool names are unique", func(t *testing.T) {
 		t.Parallel()
-		r := commands.New()
+		r := commands.New(nil)
 		seen := make(map[string]struct{})
 		for _, d := range r.All() {
 			_, exists := seen[d.ToolName]
@@ -29,7 +29,7 @@ func TestRegistry_New(t *testing.T) {
 
 	t.Run("all tool names have ast_ prefix", func(t *testing.T) {
 		t.Parallel()
-		r := commands.New()
+		r := commands.New(nil)
 		for _, d := range r.All() {
 			require.True(t, len(d.ToolName) > 4 && d.ToolName[:4] == "ast_",
 				"tool name %q does not start with ast_", d.ToolName)
@@ -38,13 +38,13 @@ func TestRegistry_New(t *testing.T) {
 
 	t.Run("at least 46 commands registered", func(t *testing.T) {
 		t.Parallel()
-		r := commands.New()
+		r := commands.New(nil)
 		require.GreaterOrEqual(t, len(r.All()), 46)
 	})
 
 	t.Run("all commands have non-empty DataType", func(t *testing.T) {
 		t.Parallel()
-		r := commands.New()
+		r := commands.New(nil)
 		for _, d := range r.All() {
 			require.NotEmpty(t, d.DataType, "tool %s has empty DataType", d.ToolName)
 		}
@@ -52,17 +52,35 @@ func TestRegistry_New(t *testing.T) {
 
 	t.Run("all commands have non-empty CLISubcommand", func(t *testing.T) {
 		t.Parallel()
-		r := commands.New()
+		r := commands.New(nil)
 		for _, d := range r.All() {
 			require.NotEmpty(t, d.CLISubcommand, "tool %s has empty CLISubcommand", d.ToolName)
 		}
 	})
 }
 
+func TestRegistry_GroupFiltering(t *testing.T) {
+	t.Parallel()
+
+	t.Run("New(nil) returns all tools when no groups tagged", func(t *testing.T) {
+		t.Parallel()
+		// Before groups are tagged on tools, nil == all tools included.
+		r := commands.New(nil)
+		require.NotEmpty(t, r.All())
+	})
+
+	t.Run("New with unknown group returns same as nil before groups are tagged", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"unknowngroup"})
+		// All tools have empty Groups, so all are universal → all included.
+		require.NotEmpty(t, r.All())
+	})
+}
+
 func TestRegistry_Get(t *testing.T) {
 	t.Parallel()
 
-	r := commands.New()
+	r := commands.New(nil)
 
 	t.Run("returns known command", func(t *testing.T) {
 		t.Parallel()
