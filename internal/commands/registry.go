@@ -495,25 +495,16 @@ func allCommands() []CommandDef {
 			},
 		},
 		{
-			ToolName:       "ast_resource_usages",
+			ToolName:       "ast_resource",
 			CLISubcommand:  "resource-usages",
-			Description:    "Find usages of a resource (R.* / string / drawable)",
+			Description:    "Resource usages (R.* / string / drawable); set unused=true to list unused in a module",
 			DataType:       "resource_usages",
 			UsesFormatJSON: true,
 			Groups:         []string{"android"},
 			Args: []ArgDef{
-				{Name: "resource", Kind: ArgKindString, Required: true, Description: "Resource identifier"},
-			},
-		},
-		{
-			ToolName:       "ast_resource_unused",
-			CLISubcommand:  "resource-usages",
-			Description:    "Find unused resources in a module",
-			DataType:       "unused_resources",
-			UsesFormatJSON: true,
-			Groups:         []string{"android"},
-			Args: []ArgDef{
-				{Name: "module", Kind: ArgKindString, Required: true, Description: "Module name"},
+				{Name: "resource", Kind: ArgKindString, Description: "Resource identifier (omit when unused=true)"},
+				{Name: "module", Kind: ArgKindString, Description: "Module name (required when unused=true)", Flag: "module"},
+				{Name: "unused", Kind: ArgKindBoolean, Description: "List unused resources instead of searching usages"},
 			},
 		},
 		{
@@ -528,25 +519,16 @@ func allCommands() []CommandDef {
 			},
 		},
 		{
-			ToolName:       "ast_asset_usages",
+			ToolName:       "ast_asset",
 			CLISubcommand:  "asset-usages",
-			Description:    "Find usages of an asset",
+			Description:    "Asset usages; set unused=true to list unused assets in a module",
 			DataType:       "asset_usages",
 			UsesFormatJSON: true,
 			Groups:         []string{"android"},
 			Args: []ArgDef{
-				{Name: "asset", Kind: ArgKindString, Description: "Asset name (optional)"},
-			},
-		},
-		{
-			ToolName:       "ast_asset_unused",
-			CLISubcommand:  "asset-usages",
-			Description:    "Find unused assets in a module",
-			DataType:       "unused_assets",
-			UsesFormatJSON: true,
-			Groups:         []string{"android"},
-			Args: []ArgDef{
-				{Name: "module", Kind: ArgKindString, Required: true, Description: "Module name"},
+				{Name: "asset", Kind: ArgKindString, Description: "Asset name (omit when unused=true)"},
+				{Name: "module", Kind: ArgKindString, Description: "Module name (required when unused=true)", Flag: "module"},
+				{Name: "unused", Kind: ArgKindBoolean, Description: "List unused assets instead of searching usages"},
 			},
 		},
 		{

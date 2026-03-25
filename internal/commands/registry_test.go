@@ -128,8 +128,7 @@ func TestRegistry_GroupFiltering_WithTags(t *testing.T) {
 		r := commands.New(nil)
 		langSpecific := []string{
 			"ast_suspend", "ast_composables", "ast_flows", "ast_previews", "ast_async_funcs",
-			"ast_deeplinks", "ast_xml_usages", "ast_resource_usages", "ast_resource_unused",
-			"ast_asset_usages", "ast_asset_unused",
+			"ast_deeplinks", "ast_xml_usages", "ast_resource", "ast_asset",
 			"ast_swiftui", "ast_publishers", "ast_main_actor", "ast_storyboard_usages",
 			"ast_perl_exports", "ast_perl_subs", "ast_perl_pod", "ast_perl_tests", "ast_perl_imports",
 		}
@@ -160,7 +159,7 @@ func TestRegistry_GroupFiltering_WithTags(t *testing.T) {
 	t.Run("New(android) includes android tools", func(t *testing.T) {
 		t.Parallel()
 		r := commands.New([]string{"android"})
-		for _, name := range []string{"ast_deeplinks", "ast_xml_usages", "ast_resource_usages", "ast_resource_unused", "ast_asset_usages", "ast_asset_unused"} {
+		for _, name := range []string{"ast_deeplinks", "ast_xml_usages", "ast_resource", "ast_asset"} {
 			_, ok := r.Get(name)
 			require.True(t, ok, "tool %s should be included with android group", name)
 		}
@@ -173,6 +172,35 @@ func TestRegistry_GroupFiltering_WithTags(t *testing.T) {
 			_, ok := r.Get(name)
 			require.True(t, ok, "tool %s should be included with perl group", name)
 		}
+	})
+
+	t.Run("ast_resource replaces ast_resource_usages and ast_resource_unused", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"android"})
+		_, hasOldUsages := r.Get("ast_resource_usages")
+		_, hasOldUnused := r.Get("ast_resource_unused")
+		_, hasMerged := r.Get("ast_resource")
+		require.False(t, hasOldUsages)
+		require.False(t, hasOldUnused)
+		require.True(t, hasMerged)
+	})
+
+	t.Run("ast_asset replaces ast_asset_usages and ast_asset_unused", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"android"})
+		_, hasOldUsages := r.Get("ast_asset_usages")
+		_, hasOldUnused := r.Get("ast_asset_unused")
+		_, hasMerged := r.Get("ast_asset")
+		require.False(t, hasOldUsages)
+		require.False(t, hasOldUnused)
+		require.True(t, hasMerged)
+	})
+
+	t.Run("New(android) count after merge is 45", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"android"})
+		// 41 universal + 4 android (ast_deeplinks, ast_xml_usages, ast_resource, ast_asset)
+		require.Equal(t, 45, len(r.All()))
 	})
 
 }

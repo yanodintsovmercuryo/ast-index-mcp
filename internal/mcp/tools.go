@@ -140,16 +140,24 @@ func (h *ToolHandler) buildArgv(def commands.CommandDef, args map[string]any, cw
 
 	argv = append(argv, def.CLISubcommand)
 
-	// Special handling for ast_resource_unused and ast_asset_unused (need --unused --module flags).
+	// Special handling for merged ast_resource and ast_asset tools.
 	switch def.ToolName {
-	case "ast_resource_unused":
-		if module, ok := stringArg(args, "module"); ok && module != "" {
+	case "ast_resource", "ast_asset":
+		unused, _ := boolArg(args, "unused")
+		if unused {
+			module, ok := stringArg(args, "module")
+			if !ok || module == "" {
+				return nil, fmt.Errorf("missing required argument: module (required when unused=true)")
+			}
 			argv = append(argv, "--unused", "--module", module)
-		}
-		return argv, nil
-	case "ast_asset_unused":
-		if module, ok := stringArg(args, "module"); ok && module != "" {
-			argv = append(argv, "--unused", "--module", module)
+		} else {
+			argName := "resource"
+			if def.ToolName == "ast_asset" {
+				argName = "asset"
+			}
+			if v, ok := stringArg(args, argName); ok && v != "" {
+				argv = append(argv, v)
+			}
 		}
 		return argv, nil
 	}

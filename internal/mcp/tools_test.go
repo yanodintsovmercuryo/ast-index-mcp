@@ -181,6 +181,65 @@ func TestToolHandler_Handle_IndexNotFound(t *testing.T) {
 	})
 }
 
+func TestToolHandler_MergedTools(t *testing.T) {
+	t.Parallel()
+
+	root := t.TempDir()
+	guard, err := security.NewPathGuard(root)
+	require.NoError(t, err)
+	handler := internalmcp.NewToolHandler("echo", root, 5,
+		commands.New([]string{"android"}), guard, runner.New(), normalize.New())
+
+	t.Run("ast_resource unused=false passes resource as positional", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_resource", map[string]any{
+			"resource": "R.string.title",
+		})
+		require.Equal(t, "ast_resource", resp.Tool)
+		require.Contains(t, resp.Argv, "R.string.title")
+		require.NotContains(t, resp.Argv, "--unused")
+	})
+
+	t.Run("ast_resource unused=true passes --unused --module", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_resource", map[string]any{
+			"unused": true,
+			"module": ":feature-home",
+		})
+		require.Equal(t, "ast_resource", resp.Tool)
+		require.Contains(t, resp.Argv, "--unused")
+		require.Contains(t, resp.Argv, "--module")
+		require.Contains(t, resp.Argv, ":feature-home")
+	})
+
+	t.Run("ast_resource unused=true without module returns error", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_resource", map[string]any{
+			"unused": true,
+		})
+		require.False(t, resp.Ok)
+		require.NotEmpty(t, resp.Diagnostics)
+	})
+
+	t.Run("ast_asset unused=false with no asset name passes nothing extra", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_asset", map[string]any{})
+		require.Equal(t, "ast_asset", resp.Tool)
+		require.NotContains(t, resp.Argv, "--unused")
+	})
+
+	t.Run("ast_asset unused=true passes --unused --module", func(t *testing.T) {
+		t.Parallel()
+		resp := handler.Handle(context.Background(), "ast_asset", map[string]any{
+			"unused": true,
+			"module": ":feature-home",
+		})
+		require.Contains(t, resp.Argv, "--unused")
+		require.Contains(t, resp.Argv, "--module")
+		require.Contains(t, resp.Argv, ":feature-home")
+	})
+}
+
 func TestToolHandler_ResponseEnvelope_Contract(t *testing.T) {
 	t.Parallel()
 
