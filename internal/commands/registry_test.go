@@ -36,10 +36,10 @@ func TestRegistry_New(t *testing.T) {
 		}
 	})
 
-	t.Run("at least 46 commands registered", func(t *testing.T) {
+	t.Run("New(nil) registers universal tools only", func(t *testing.T) {
 		t.Parallel()
 		r := commands.New(nil)
-		require.GreaterOrEqual(t, len(r.All()), 46)
+		require.Equal(t, 41, len(r.All()))
 	})
 
 	t.Run("all commands have non-empty DataType", func(t *testing.T) {
@@ -69,11 +69,11 @@ func TestRegistry_GroupFiltering(t *testing.T) {
 		require.NotEmpty(t, r.All())
 	})
 
-	t.Run("New with unknown group returns same as nil before groups are tagged", func(t *testing.T) {
+	t.Run("New with unknown group only returns universal tools", func(t *testing.T) {
 		t.Parallel()
-		r := commands.New([]string{"unknowngroup"})
-		// All tools have empty Groups, so all are universal → all included.
-		require.NotEmpty(t, r.All())
+		rUnknown := commands.New([]string{"unknowngroup"})
+		rNil := commands.New(nil)
+		require.Equal(t, len(rNil.All()), len(rUnknown.All()))
 	})
 }
 
@@ -118,5 +118,67 @@ func TestRegistry_Get(t *testing.T) {
 		for _, arg := range d.Args {
 			require.False(t, arg.Required, "ast_version should have no required args")
 		}
+	})
+}
+
+func TestRegistry_GroupFiltering_WithTags(t *testing.T) {
+	t.Parallel()
+
+	t.Run("New(nil) excludes language-specific tools", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New(nil)
+		langSpecific := []string{
+			"ast_suspend", "ast_composables", "ast_flows", "ast_previews", "ast_async_funcs",
+			"ast_deeplinks", "ast_xml_usages", "ast_resource_usages", "ast_resource_unused",
+			"ast_asset_usages", "ast_asset_unused",
+			"ast_swiftui", "ast_publishers", "ast_main_actor", "ast_storyboard_usages",
+			"ast_perl_exports", "ast_perl_subs", "ast_perl_pod", "ast_perl_tests", "ast_perl_imports",
+		}
+		for _, name := range langSpecific {
+			_, ok := r.Get(name)
+			require.False(t, ok, "tool %s should not be in universal set", name)
+		}
+	})
+
+	t.Run("New(kotlin) includes kotlin tools", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"kotlin"})
+		for _, name := range []string{"ast_suspend", "ast_composables", "ast_flows", "ast_previews", "ast_async_funcs"} {
+			_, ok := r.Get(name)
+			require.True(t, ok, "tool %s should be included with kotlin group", name)
+		}
+	})
+
+	t.Run("New(swift) includes swift tools including ast_async_funcs", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"swift"})
+		for _, name := range []string{"ast_swiftui", "ast_publishers", "ast_main_actor", "ast_storyboard_usages", "ast_async_funcs"} {
+			_, ok := r.Get(name)
+			require.True(t, ok, "tool %s should be included with swift group", name)
+		}
+	})
+
+	t.Run("New(android) includes android tools", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"android"})
+		for _, name := range []string{"ast_deeplinks", "ast_xml_usages", "ast_resource_usages", "ast_resource_unused", "ast_asset_usages", "ast_asset_unused"} {
+			_, ok := r.Get(name)
+			require.True(t, ok, "tool %s should be included with android group", name)
+		}
+	})
+
+	t.Run("New(perl) includes perl tools", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New([]string{"perl"})
+		for _, name := range []string{"ast_perl_exports", "ast_perl_subs", "ast_perl_pod", "ast_perl_tests", "ast_perl_imports"} {
+			_, ok := r.Get(name)
+			require.True(t, ok, "tool %s should be included with perl group", name)
+		}
+	})
+
+	t.Run("New(nil) universal tool count is 41", func(t *testing.T) {
+		t.Parallel()
+		r := commands.New(nil)
+		require.Equal(t, 41, len(r.All()))
 	})
 }

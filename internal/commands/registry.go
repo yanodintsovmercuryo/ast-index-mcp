@@ -297,6 +297,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Kotlin suspend / async functions",
 			DataType:       "symbols",
 			UsesFormatJSON: true,
+			Groups:         []string{"kotlin"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional name filter"},
 			},
@@ -307,6 +308,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Jetpack Compose @Composable functions",
 			DataType:       "symbols",
 			UsesFormatJSON: true,
+			Groups:         []string{"kotlin"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional name filter"},
 			},
@@ -357,6 +359,7 @@ func allCommands() []CommandDef {
 			Description:    "Find deep-link URI patterns",
 			DataType:       "deeplinks",
 			UsesFormatJSON: true,
+			Groups:         []string{"android"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional URI pattern filter"},
 			},
@@ -377,6 +380,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Kotlin Flow / reactive stream usages",
 			DataType:       "reactive_streams",
 			UsesFormatJSON: true,
+			Groups:         []string{"kotlin"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -387,6 +391,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Compose @Preview functions",
 			DataType:       "preview_items",
 			UsesFormatJSON: true,
+			Groups:         []string{"kotlin"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -484,6 +489,7 @@ func allCommands() []CommandDef {
 			Description:    "Find XML layout usages of a class",
 			DataType:       "xml_usages",
 			UsesFormatJSON: true,
+			Groups:         []string{"android"},
 			Args: []ArgDef{
 				{Name: "class_name", Kind: ArgKindString, Required: true, Description: "Class name"},
 			},
@@ -494,6 +500,7 @@ func allCommands() []CommandDef {
 			Description:    "Find usages of a resource (R.* / string / drawable)",
 			DataType:       "resource_usages",
 			UsesFormatJSON: true,
+			Groups:         []string{"android"},
 			Args: []ArgDef{
 				{Name: "resource", Kind: ArgKindString, Required: true, Description: "Resource identifier"},
 			},
@@ -504,6 +511,7 @@ func allCommands() []CommandDef {
 			Description:    "Find unused resources in a module",
 			DataType:       "unused_resources",
 			UsesFormatJSON: true,
+			Groups:         []string{"android"},
 			Args: []ArgDef{
 				{Name: "module", Kind: ArgKindString, Required: true, Description: "Module name"},
 			},
@@ -514,6 +522,7 @@ func allCommands() []CommandDef {
 			Description:    "Find storyboard/xib usages of a class",
 			DataType:       "storyboard_usages",
 			UsesFormatJSON: true,
+			Groups:         []string{"swift"},
 			Args: []ArgDef{
 				{Name: "class_name", Kind: ArgKindString, Required: true, Description: "Class name"},
 			},
@@ -524,6 +533,7 @@ func allCommands() []CommandDef {
 			Description:    "Find usages of an asset",
 			DataType:       "asset_usages",
 			UsesFormatJSON: true,
+			Groups:         []string{"android"},
 			Args: []ArgDef{
 				{Name: "asset", Kind: ArgKindString, Description: "Asset name (optional)"},
 			},
@@ -534,6 +544,7 @@ func allCommands() []CommandDef {
 			Description:    "Find unused assets in a module",
 			DataType:       "unused_assets",
 			UsesFormatJSON: true,
+			Groups:         []string{"android"},
 			Args: []ArgDef{
 				{Name: "module", Kind: ArgKindString, Required: true, Description: "Module name"},
 			},
@@ -544,6 +555,7 @@ func allCommands() []CommandDef {
 			Description:    "Find SwiftUI views and modifiers",
 			DataType:       "swiftui_items",
 			UsesFormatJSON: true,
+			Groups:         []string{"swift"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -554,6 +566,7 @@ func allCommands() []CommandDef {
 			Description:    "Find async/await functions (Swift/Kotlin)",
 			DataType:       "async_functions",
 			UsesFormatJSON: true,
+			Groups:         []string{"kotlin", "swift"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -564,6 +577,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Combine Publisher declarations",
 			DataType:       "combine_publishers",
 			UsesFormatJSON: true,
+			Groups:         []string{"swift"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -574,6 +588,7 @@ func allCommands() []CommandDef {
 			Description:    "Find @MainActor annotated symbols",
 			DataType:       "main_actor_items",
 			UsesFormatJSON: true,
+			Groups:         []string{"swift"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -586,6 +601,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Perl module exports",
 			DataType:       "perl_exports",
 			UsesFormatJSON: true,
+			Groups:         []string{"perl"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -596,6 +612,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Perl subroutines",
 			DataType:       "perl_subroutines",
 			UsesFormatJSON: true,
+			Groups:         []string{"perl"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -606,6 +623,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Perl POD documentation blocks",
 			DataType:       "perl_pod_docs",
 			UsesFormatJSON: true,
+			Groups:         []string{"perl"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -616,6 +634,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Perl test assertions",
 			DataType:       "perl_test_assertions",
 			UsesFormatJSON: true,
+			Groups:         []string{"perl"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
@@ -626,6 +645,7 @@ func allCommands() []CommandDef {
 			Description:    "Find Perl use/require statements",
 			DataType:       "perl_imports",
 			UsesFormatJSON: true,
+			Groups:         []string{"perl"},
 			Args: []ArgDef{
 				{Name: "query", Kind: ArgKindString, Description: "Optional filter"},
 			},
