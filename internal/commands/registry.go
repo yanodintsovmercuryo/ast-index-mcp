@@ -178,7 +178,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_file",
 			CLISubcommand:  "file",
-			Description:    "Find files by name pattern",
+			Description:    "Files by name pattern",
 			DataType:       "files",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
