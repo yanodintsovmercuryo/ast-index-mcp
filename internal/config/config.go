@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -21,6 +22,8 @@ type Config struct {
 	LogLevel string
 	// TimeoutSec is the default command timeout in seconds. Env: AST_INDEX_TIMEOUT_SEC.
 	TimeoutSec int
+	// Tools is the list of opt-in tool groups. Env: AST_INDEX_TOOLS.
+	Tools []string
 }
 
 // Load reads configuration from environment variables, applying defaults where not set.
@@ -51,10 +54,21 @@ func Load() (*Config, error) {
 		logLevel = v
 	}
 
+	var tools []string
+	if v := os.Getenv("AST_INDEX_TOOLS"); v != "" {
+		for _, g := range strings.Split(v, ",") {
+			g = strings.TrimSpace(g)
+			if g != "" {
+				tools = append(tools, g)
+			}
+		}
+	}
+
 	return &Config{
 		Bin:        bin,
 		CWD:        cwd,
 		TimeoutSec: timeoutSec,
 		LogLevel:   logLevel,
+		Tools:      tools,
 	}, nil
 }

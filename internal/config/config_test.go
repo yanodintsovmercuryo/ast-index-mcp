@@ -89,4 +89,40 @@ func TestLoad(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, "debug", cfg.LogLevel)
 	})
+
+	t.Run("AST_INDEX_TOOLS comma-separated", func(t *testing.T) {
+		t.Setenv("AST_INDEX_TOOLS", "kotlin,android")
+		t.Setenv("AST_INDEX_BIN", "")
+		t.Setenv("AST_INDEX_CWD", "")
+		t.Setenv("AST_INDEX_TIMEOUT_SEC", "")
+		t.Setenv("AST_INDEX_LOG_LEVEL", "")
+
+		cfg, err := config.Load()
+		require.NoError(t, err)
+		require.Equal(t, []string{"kotlin", "android"}, cfg.Tools)
+	})
+
+	t.Run("AST_INDEX_TOOLS not set returns nil", func(t *testing.T) {
+		t.Setenv("AST_INDEX_TOOLS", "")
+		t.Setenv("AST_INDEX_BIN", "")
+		t.Setenv("AST_INDEX_CWD", "")
+		t.Setenv("AST_INDEX_TIMEOUT_SEC", "")
+		t.Setenv("AST_INDEX_LOG_LEVEL", "")
+
+		cfg, err := config.Load()
+		require.NoError(t, err)
+		require.Nil(t, cfg.Tools)
+	})
+
+	t.Run("AST_INDEX_TOOLS trims spaces", func(t *testing.T) {
+		t.Setenv("AST_INDEX_TOOLS", " kotlin , android ")
+		t.Setenv("AST_INDEX_BIN", "")
+		t.Setenv("AST_INDEX_CWD", "")
+		t.Setenv("AST_INDEX_TIMEOUT_SEC", "")
+		t.Setenv("AST_INDEX_LOG_LEVEL", "")
+
+		cfg, err := config.Load()
+		require.NoError(t, err)
+		require.Equal(t, []string{"kotlin", "android"}, cfg.Tools)
+	})
 }
