@@ -16,6 +16,7 @@ func TestLoad(t *testing.T) {
 		t.Setenv("AST_INDEX_CWD", "")
 		t.Setenv("AST_INDEX_TIMEOUT_SEC", "")
 		t.Setenv("AST_INDEX_LOG_LEVEL", "")
+		t.Setenv("AST_INDEX_TOOLS", "")
 
 		cfg, err := config.Load()
 		require.NoError(t, err)
