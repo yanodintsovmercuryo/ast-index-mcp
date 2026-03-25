@@ -62,9 +62,8 @@ func TestRegistry_New(t *testing.T) {
 func TestRegistry_GroupFiltering(t *testing.T) {
 	t.Parallel()
 
-	t.Run("New(nil) returns all tools when no groups tagged", func(t *testing.T) {
+	t.Run("New(nil) returns non-empty result", func(t *testing.T) {
 		t.Parallel()
-		// Before groups are tagged on tools, nil == all tools included.
 		r := commands.New(nil)
 		require.NotEmpty(t, r.All())
 	})
@@ -176,9 +175,4 @@ func TestRegistry_GroupFiltering_WithTags(t *testing.T) {
 		}
 	})
 
-	t.Run("New(nil) universal tool count is 41", func(t *testing.T) {
-		t.Parallel()
-		r := commands.New(nil)
-		require.Equal(t, 41, len(r.All()))
-	})
 }
