@@ -91,12 +91,14 @@ func run() error {
 		logger.Info("starting ast-index-mcp in open mode (no root restriction — pass cwd per call)",
 			zap.String("bin", cfg.Bin),
 			zap.Int("tools", len(registry.All())),
+			zap.Strings("groups", cfg.Tools),
 		)
 	} else {
 		logger.Info("starting ast-index-mcp",
 			zap.String("bin", cfg.Bin),
 			zap.String("cwd", cfg.CWD),
 			zap.Int("tools", len(registry.All())),
+			zap.Strings("groups", cfg.Tools),
 		)
 	}
 
