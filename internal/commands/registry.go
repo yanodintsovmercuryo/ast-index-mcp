@@ -145,7 +145,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_search",
 			CLISubcommand:  "search",
-			Description:    "Full-text and semantic search across the indexed codebase",
+			Description:    "Full-text and semantic search across the index",
 			DataType:       "search_hits",
 			UsesFormatJSON: true,
 			AllowRawArgs:   true,
@@ -157,7 +157,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_symbol",
 			CLISubcommand:  "symbol",
-			Description:    "Find symbols by name",
+			Description:    "Symbol lookup by name or prefix",
 			DataType:       "symbols",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -168,7 +168,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_class",
 			CLISubcommand:  "class",
-			Description:    "Find class, interface, struct or trait declarations",
+			Description:    "Class, interface, struct or trait declarations",
 			DataType:       "symbols",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -189,7 +189,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_usages",
 			CLISubcommand:  "usages",
-			Description:    "Find all usages of a symbol",
+			Description:    "Usages of a symbol",
 			DataType:       "references",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -200,7 +200,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_refs",
 			CLISubcommand:  "refs",
-			Description:    "Get cross-references for a symbol: definitions, usages, imports",
+			Description:    "Cross-references for a symbol: definitions, usages, imports",
 			DataType:       "cross_references",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -210,7 +210,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_callers",
 			CLISubcommand:  "callers",
-			Description:    "Find all call sites of a function",
+			Description:    "All call sites of a function",
 			DataType:       "call_sites",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -220,7 +220,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_call_tree",
 			CLISubcommand:  "call-tree",
-			Description:    "Build call tree rooted at a function",
+			Description:    "Call tree rooted at a function",
 			DataType:       "call_tree",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -231,7 +231,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_implementations",
 			CLISubcommand:  "implementations",
-			Description:    "Find all implementations of an interface or abstract class",
+			Description:    "Implementations of an interface or abstract class",
 			DataType:       "implementations",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -241,7 +241,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_hierarchy",
 			CLISubcommand:  "hierarchy",
-			Description:    "Show class/type inheritance hierarchy",
+			Description:    "Class/type inheritance hierarchy",
 			DataType:       "hierarchy",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -252,7 +252,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_outline",
 			CLISubcommand:  "outline",
-			Description:    "Show all symbols defined in a file",
+			Description:    "Symbols defined in a file",
 			DataType:       "file_outline",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -262,7 +262,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_imports",
 			CLISubcommand:  "imports",
-			Description:    "List all imports in a file",
+			Description:    "Imports in a file",
 			DataType:       "imports",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -274,7 +274,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_todo",
 			CLISubcommand:  "todo",
-			Description:    "Find TODO/FIXME/HACK comments",
+			Description:    "TODO/FIXME/HACK comments",
 			DataType:       "todo_items",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -284,7 +284,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_provides",
 			CLISubcommand:  "provides",
-			Description:    "Find dependency-injection providers for a type",
+			Description:    "Dependency-injection providers for a type",
 			DataType:       "di_providers",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -294,7 +294,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_suspend",
 			CLISubcommand:  "suspend",
-			Description:    "Find Kotlin suspend / async functions",
+			Description:    "Kotlin suspend / async functions",
 			DataType:       "symbols",
 			UsesFormatJSON: true,
 			Groups:         []string{"kotlin"},
@@ -305,7 +305,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_composables",
 			CLISubcommand:  "composables",
-			Description:    "Find Jetpack Compose @Composable functions",
+			Description:    "Jetpack Compose @Composable functions",
 			DataType:       "symbols",
 			UsesFormatJSON: true,
 			Groups:         []string{"kotlin"},
@@ -316,7 +316,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_deprecated",
 			CLISubcommand:  "deprecated",
-			Description:    "Find deprecated symbols",
+			Description:    "Deprecated symbols",
 			DataType:       "deprecated_items",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -326,7 +326,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_suppress",
 			CLISubcommand:  "suppress",
-			Description:    "Find suppressed warnings / lint annotations",
+			Description:    "Suppressed warnings / lint annotations",
 			DataType:       "annotations",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -336,7 +336,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_inject",
 			CLISubcommand:  "inject",
-			Description:    "Find injection points for a type",
+			Description:    "Injection points for a type",
 			DataType:       "di_injections",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -346,7 +346,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_annotations",
 			CLISubcommand:  "annotations",
-			Description:    "Find symbols annotated with a specific annotation",
+			Description:    "Symbols annotated with a specific annotation",
 			DataType:       "annotations",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -356,7 +356,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_deeplinks",
 			CLISubcommand:  "deeplinks",
-			Description:    "Find deep-link URI patterns",
+			Description:    "Deep-link URI patterns",
 			DataType:       "deeplinks",
 			UsesFormatJSON: true,
 			Groups:         []string{"android"},
@@ -367,7 +367,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_extensions",
 			CLISubcommand:  "extensions",
-			Description:    "Find extension functions for a type",
+			Description:    "Extension functions for a type",
 			DataType:       "extension_functions",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -377,7 +377,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_flows",
 			CLISubcommand:  "flows",
-			Description:    "Find Kotlin Flow / reactive stream usages",
+			Description:    "Kotlin Flow / reactive stream usages",
 			DataType:       "reactive_streams",
 			UsesFormatJSON: true,
 			Groups:         []string{"kotlin"},
@@ -388,7 +388,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_previews",
 			CLISubcommand:  "previews",
-			Description:    "Find Compose @Preview functions",
+			Description:    "Compose @Preview functions",
 			DataType:       "preview_items",
 			UsesFormatJSON: true,
 			Groups:         []string{"kotlin"},
@@ -399,7 +399,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_agrep",
 			CLISubcommand:  "agrep",
-			Description:    "AST-aware structural pattern search. Requires ast-grep installed (brew install ast-grep / npm i -g @ast-grep/cli).",
+			Description:    "Structural pattern search (requires ast-grep)",
 			DataType:       "pattern_matches",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -412,7 +412,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_module",
 			CLISubcommand:  "module",
-			Description:    "Find modules by name pattern",
+			Description:    "Modules by name pattern",
 			DataType:       "modules",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -422,7 +422,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_deps",
 			CLISubcommand:  "deps",
-			Description:    "List dependencies of a module",
+			Description:    "Dependencies of a module",
 			DataType:       "dependencies",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -433,7 +433,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_dependents",
 			CLISubcommand:  "dependents",
-			Description:    "Find modules that depend on a given module",
+			Description:    "Modules that depend on a given module",
 			DataType:       "dependents",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -444,7 +444,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_unused_deps",
 			CLISubcommand:  "unused-deps",
-			Description:    "Find unused dependencies of a module",
+			Description:    "Unused dependencies of a module",
 			DataType:       "unused_dependencies",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -454,7 +454,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_api",
 			CLISubcommand:  "api",
-			Description:    "Show public API surface of a module",
+			Description:    "Public API surface of a module",
 			DataType:       "public_api",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -464,7 +464,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_map",
 			CLISubcommand:  "map",
-			Description:    "Show high-level project structure map",
+			Description:    "High-level project structure map",
 			DataType:       "project_map",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -474,7 +474,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_conventions",
 			CLISubcommand:  "conventions",
-			Description:    "Detect project architecture and coding conventions",
+			Description:    "Project architecture and coding conventions",
 			DataType:       "conventions",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -486,7 +486,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_xml_usages",
 			CLISubcommand:  "xml-usages",
-			Description:    "Find XML layout usages of a class",
+			Description:    "XML layout usages of a class",
 			DataType:       "xml_usages",
 			UsesFormatJSON: true,
 			Groups:         []string{"android"},
@@ -510,7 +510,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_storyboard_usages",
 			CLISubcommand:  "storyboard-usages",
-			Description:    "Find storyboard/xib usages of a class",
+			Description:    "Storyboard/xib usages of a class",
 			DataType:       "storyboard_usages",
 			UsesFormatJSON: true,
 			Groups:         []string{"swift"},
@@ -534,7 +534,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_swiftui",
 			CLISubcommand:  "swiftui",
-			Description:    "Find SwiftUI views and modifiers",
+			Description:    "SwiftUI views and modifiers",
 			DataType:       "swiftui_items",
 			UsesFormatJSON: true,
 			Groups:         []string{"swift"},
@@ -545,7 +545,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_async_funcs",
 			CLISubcommand:  "async-funcs",
-			Description:    "Find async/await functions (Swift/Kotlin)",
+			Description:    "Async/await functions (Swift/Kotlin)",
 			DataType:       "async_functions",
 			UsesFormatJSON: true,
 			Groups:         []string{"kotlin", "swift"},
@@ -556,7 +556,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_publishers",
 			CLISubcommand:  "publishers",
-			Description:    "Find Combine Publisher declarations",
+			Description:    "Combine Publisher declarations",
 			DataType:       "combine_publishers",
 			UsesFormatJSON: true,
 			Groups:         []string{"swift"},
@@ -567,7 +567,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_main_actor",
 			CLISubcommand:  "main-actor",
-			Description:    "Find @MainActor annotated symbols",
+			Description:    "@MainActor annotated symbols",
 			DataType:       "main_actor_items",
 			UsesFormatJSON: true,
 			Groups:         []string{"swift"},
@@ -580,7 +580,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_perl_exports",
 			CLISubcommand:  "perl-exports",
-			Description:    "Find Perl module exports",
+			Description:    "Perl module exports",
 			DataType:       "perl_exports",
 			UsesFormatJSON: true,
 			Groups:         []string{"perl"},
@@ -591,7 +591,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_perl_subs",
 			CLISubcommand:  "perl-subs",
-			Description:    "Find Perl subroutines",
+			Description:    "Perl subroutines",
 			DataType:       "perl_subroutines",
 			UsesFormatJSON: true,
 			Groups:         []string{"perl"},
@@ -602,7 +602,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_perl_pod",
 			CLISubcommand:  "perl-pod",
-			Description:    "Find Perl POD documentation blocks",
+			Description:    "Perl POD documentation blocks",
 			DataType:       "perl_pod_docs",
 			UsesFormatJSON: true,
 			Groups:         []string{"perl"},
@@ -613,7 +613,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_perl_tests",
 			CLISubcommand:  "perl-tests",
-			Description:    "Find Perl test assertions",
+			Description:    "Perl test assertions",
 			DataType:       "perl_test_assertions",
 			UsesFormatJSON: true,
 			Groups:         []string{"perl"},
@@ -624,7 +624,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_perl_imports",
 			CLISubcommand:  "perl-imports",
-			Description:    "Find Perl use/require statements",
+			Description:    "Perl use/require statements",
 			DataType:       "perl_imports",
 			UsesFormatJSON: true,
 			Groups:         []string{"perl"},
@@ -637,7 +637,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_changed",
 			CLISubcommand:  "changed",
-			Description:    "Show symbols changed since a git base branch",
+			Description:    "Symbols changed since a git base branch",
 			DataType:       "changed_symbols",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -678,7 +678,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_watch",
 			CLISubcommand:  "watch",
-			Description:    "Start file-watcher for automatic index updates",
+			Description:    "File-watcher for automatic index updates",
 			DataType:       "watch_status",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -688,7 +688,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_stats",
 			CLISubcommand:  "stats",
-			Description:    "Show index statistics",
+			Description:    "Index statistics",
 			DataType:       "index_stats",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -698,14 +698,14 @@ func allCommands() []CommandDef {
 		{
 			ToolName:      "ast_version",
 			CLISubcommand: "version",
-			Description:   "Show ast-index version information",
+			Description:   "ast-index version information",
 			DataType:      "version_info",
 			Args:          []ArgDef{},
 		},
 		{
 			ToolName:       "ast_unused_symbols",
 			CLISubcommand:  "unused-symbols",
-			Description:    "Find unused symbols in the codebase",
+			Description:    "Unused symbols in the codebase",
 			DataType:       "unused_symbols",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -718,7 +718,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_add_root",
 			CLISubcommand:  "add-root",
-			Description:    "Add a new root directory to the multi-root index",
+			Description:    "Add a root directory to the multi-root index",
 			DataType:       "roots_operation",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -728,7 +728,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_list_roots",
 			CLISubcommand:  "list-roots",
-			Description:    "List all indexed root directories",
+			Description:    "All indexed root directories",
 			DataType:       "roots",
 			UsesFormatJSON: true,
 			Args:           []ArgDef{},
@@ -748,7 +748,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_query",
 			CLISubcommand:  "query",
-			Description:    "Execute a read-only SQL query against the ast-index database",
+			Description:    "Read-only SQL query against the ast-index database",
 			DataType:       "sql_result",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
@@ -759,7 +759,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_db_path",
 			CLISubcommand:  "db-path",
-			Description:    "Show the path to the ast-index SQLite database file",
+			Description:    "Path to the ast-index SQLite database file",
 			DataType:       "db_info",
 			UsesFormatJSON: true,
 			Args:           []ArgDef{},
@@ -767,7 +767,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_schema",
 			CLISubcommand:  "schema",
-			Description:    "Show the database schema (tables, indexes, columns)",
+			Description:    "Database schema (tables, indexes, columns)",
 			DataType:       "db_schema",
 			UsesFormatJSON: true,
 			Args: []ArgDef{
