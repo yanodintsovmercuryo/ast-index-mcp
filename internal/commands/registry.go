@@ -497,7 +497,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_resource",
 			CLISubcommand:  "resource-usages",
-			Description:    "Resource usages (R.* / string / drawable); set unused=true to list unused in a module",
+			Description:    "Resource usages; pass unused=true to list unused in module",
 			DataType:       "resource_usages",
 			UsesFormatJSON: true,
 			Groups:         []string{"android"},
@@ -521,7 +521,7 @@ func allCommands() []CommandDef {
 		{
 			ToolName:       "ast_asset",
 			CLISubcommand:  "asset-usages",
-			Description:    "Asset usages; set unused=true to list unused assets in a module",
+			Description:    "Asset usages; pass unused=true to list unused in module",
 			DataType:       "asset_usages",
 			UsesFormatJSON: true,
 			Groups:         []string{"android"},
